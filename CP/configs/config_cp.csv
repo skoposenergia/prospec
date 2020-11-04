@@ -1,0 +1,12 @@
+mes,11,11
+rev,0,1
+sub_mer1,"SE","SE"
+lim_inf1,74,60
+lim_sup1,77,81
+passo1,1,5
+base1,0.76,0.67
+sub_mer2,"S","S"
+lim_inf2,49,20
+lim_sup2,51,61
+passo2,1,10
+base2,0.24,0.27

@@ -1,3 +1,9 @@
+#Remove in/output files
+saídas/*
+entradas/*
+CP/saídas/*
+CP/saídas/*
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
