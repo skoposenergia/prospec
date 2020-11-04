@@ -29,7 +29,6 @@ token = ''
 def authenticateProspec(username, password):
     global token
     token = getToken(username, password)
-    return token
 
 # -----------------------------------------------------------------------------
 # Update Password | Atualizar Senha
