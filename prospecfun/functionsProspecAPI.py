@@ -6,14 +6,14 @@ Plan4
 """
 import os
 
-from requestsProspecAPI import getToken
-from requestsProspecAPI import getInfoFromAPI
-from requestsProspecAPI import postInAPI
-from requestsProspecAPI import sendFileToAPI
-from requestsProspecAPI import getFileFromAPI
-from requestsProspecAPI import getCompilationFromAPI
-from requestsProspecAPI import getFileFromS3viaAPI
-from requestsProspecAPI import sendFiles
+from prospecfun.requestsProspecAPI import getToken
+from prospecfun.requestsProspecAPI import getInfoFromAPI
+from prospecfun.requestsProspecAPI import postInAPI
+from prospecfun.requestsProspecAPI import sendFileToAPI
+from prospecfun.requestsProspecAPI import getFileFromAPI
+from prospecfun.requestsProspecAPI import getCompilationFromAPI
+from prospecfun.requestsProspecAPI import getFileFromS3viaAPI
+from prospecfun.requestsProspecAPI import sendFiles
 
 # -----------------------------------------------------------------------------
 # Global variables | Variáveis globais
@@ -29,6 +29,7 @@ token = ''
 def authenticateProspec(username, password):
     global token
     token = getToken(username, password)
+    return token
 
 # -----------------------------------------------------------------------------
 # Update Password | Atualizar Senha
