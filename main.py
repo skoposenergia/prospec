@@ -1,4 +1,4 @@
-from prospecfun.functionsProspecAPI import *
+from src.functionsProspecAPI import *
 import requests
 from pathlib import Path
 import json
@@ -18,18 +18,29 @@ def mostRecentVersion(versions):
     return mostRecent
 
 
-authenticateProspec("daniel.mazucanti@skoposenergia.com.br", "Skopos2020")
+def main():
+    controlFlow = input("create, modify or upload: ")
 
-listDecomp = getListOfDECOMPs()
-listNewave = getListOfNEWAVEs()
-listGevazp = getListOfGEVAZPs()
+    authenticateProspec("daniel.mazucanti@skoposenergia.com.br", "Skopos2020")
+
+    if controlFlow == "create":
+        listDecomp = getListOfDECOMPs()
+        listNewave = getListOfNEWAVEs()
+        listGevazp = getListOfGEVAZPs()
+
+        print(listDecomp)
+
+        versionNewave = getVersion(listNewave)
+        versionDecomp = getVersion(listDecomp)
+        versionGevazp = getVersion(listGevazp)
+
+        print(versionDecomp)
+
+        studyId = createStudy("Isso é um teste", "Continua sendo um teste",
+                              mostRecentVersion(versionDecomp), mostRecentVersion(versionNewave))
+        
+        print(studyId)
 
 
-versionNewave = getVersion(listNewave)
-versionDecomp = getVersion(listDecomp)
-versionGevazp = getVersion(listGevazp)
 
-
-
-studyID = createStudy("Isso é um teste", "Continua sendo um teste",
-                      mostRecentVersion(versionDecomp), mostRecentVersion(versionNewave))
+main()

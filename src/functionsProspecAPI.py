@@ -6,14 +6,14 @@ Plan4
 """
 import os
 
-from prospecfun.requestsProspecAPI import getToken
-from prospecfun.requestsProspecAPI import getInfoFromAPI
-from prospecfun.requestsProspecAPI import postInAPI
-from prospecfun.requestsProspecAPI import sendFileToAPI
-from prospecfun.requestsProspecAPI import getFileFromAPI
-from prospecfun.requestsProspecAPI import getCompilationFromAPI
-from prospecfun.requestsProspecAPI import getFileFromS3viaAPI
-from prospecfun.requestsProspecAPI import sendFiles
+from src.requestsProspecAPI import getToken
+from src.requestsProspecAPI import getInfoFromAPI
+from src.requestsProspecAPI import postInAPI
+from src.requestsProspecAPI import sendFileToAPI
+from src.requestsProspecAPI import getFileFromAPI
+from src.requestsProspecAPI import getCompilationFromAPI
+from src.requestsProspecAPI import getFileFromS3viaAPI
+from src.requestsProspecAPI import sendFiles
 
 # -----------------------------------------------------------------------------
 # Global variables | Variáveis globais
@@ -224,7 +224,7 @@ def createStudy(title, description, idDecomp, idNewave):
     data = {
         "Title": title,
         "Description": description,
-        "DecompVersionId": int(idDecomp),
+        "DecompVersionId": int(round(float(idDecomp))),
         "NewaveVersionId": int(idNewave)
     }
 
