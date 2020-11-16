@@ -224,7 +224,7 @@ def createStudy(title, description, idDecomp, idNewave):
     data = {
         "Title": title,
         "Description": description,
-        "DecompVersionId": int(round(float(idDecomp))),
+        "DecompVersionId": int(idDecomp),
         "NewaveVersionId": int(idNewave)
     }
 

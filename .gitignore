@@ -1,8 +1,8 @@
 #Remove in/output files
-saídas/*
-entradas/*
-CP/saídas/*
-CP/saídas/*
+mprevs/saídas/*
+mprevs/entradas/*
+mprevs/CP/saídas/*
+mprevs/CP/saídas/*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
