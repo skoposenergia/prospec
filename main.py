@@ -39,7 +39,7 @@ def main():
 
         idStudy = 271
 
-        studies = getInfoFromStudy(idStudy)
+        studies = getInfoFromStudy(0)
         print(studies)
 
     else:
