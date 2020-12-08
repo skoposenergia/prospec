@@ -16,8 +16,10 @@ def files_rv():
     zip_gen = Path("full/").glob("**/*")
     zips_gevazp = [item for item in zip_gen if item.stat().st_size > 100000]
     num_files = len(zips_gevazp)
-    rvs = ["PMO"] + ["RV%d" % rv for rv in range(1, num_files)]
-
+    if num_files != 0:
+        rvs = ["PMO"] + ["RV%d" % rv for rv in range(1, num_files)]
+    else:
+        return ""
     return rvs.pop()
 
 
@@ -34,9 +36,9 @@ def get_newer_file(rv):
           "/Gevazp_%d%s_%s.zip" % infos
     h.update(url.encode('utf-8'))
 
-    newer_rv_file = h.hexdigest()
+    newest_file = h.hexdigest()
 
-    return "full/" + newer_rv_file + ".zip"
+    return "full/" + newest_file + ".zip"
 
 
 def extract_zip(file_dir):
@@ -44,17 +46,33 @@ def extract_zip(file_dir):
         zp.extractall('full')
 
 
-def send_files():
-    pass
+def files_cp(files, dst):
+    for item in files:
+        copyfile(item, dst)
+
+
+def send_files(rv):
+    matriz = ["REGRAS.DAT", "VAZOES.DAT", "MODIF.DAT", "POSTOS.DAT"]
+    ons_cp = ["REGRAS.DAT", "VAZOES.DAT", "MODIF.DAT", "POSTOS.DAT", "prevs.%s" % rv.upper()]
 
 
 def clear_full():
-    pass
+    files = Path("full/").glob("**/*")
+    files_dir = [item for item in files if item.is_file()]
+    for item in files_dir:
+        unlink(item)
 
 
 def main():
     get_files()
     rv = files_rv()
-    file_dir = get_newer_file(rv)
-    extract_zip(file_dir)
+    if rv == "":
+        print("Não existem GEVAZPs desse mês operativo disponíveis no momento")
+    else:
+        file_dir = get_newer_file(rv)
+        extract_zip(file_dir)
 
+    clear_full()
+
+
+main()

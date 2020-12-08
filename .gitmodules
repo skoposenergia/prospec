@@ -1,3 +1,6 @@
 [submodule "sincrawl"]
 	path = sincrawl
 	url = https://github.com/mazucanti/sincrawl.git
+[submodule "gpluv"]
+	path = gpluv
+	url = https://github.com/mazucanti/gpluv.git
