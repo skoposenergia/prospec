@@ -2,20 +2,7 @@ from src.functionsProspecAPI import *
 import requests
 from pathlib import Path
 import json
-
-
-# def getVersion(resp):
-#     version = []
-#     for item in resp:
-#         version.append(item["Version"])
-#     version.sort()
-#     return version
-
-
-# def mostRecentVersion(versions):
-#     lastItem = len(versions) - 1
-#     mostRecent = versions[lastItem]
-#     return mostRecent
+from src.arrFiles import main as prep_files
 
 
 def main():
@@ -26,21 +13,27 @@ def main():
 
     print("Foram feitas %s requisições até o momento." % numRequests)
 
-    controlFlow = input("create, modify or upload: ")
+    control_flow = input("create, modify or upload: ")
 
-    if controlFlow == "create":
+    if control_flow == "create":
+        choice = input("Qual o estudo que deseja?\n1- Curtísimo prazo")
+        choice = int(choice)
+        if choice == 1:
+            idStudy = 0
+            # idStudy = createStudy(
+            #     "Isso é um teste", "Continua sendo um teste", 0, 0)
 
-        idStudy = createStudy(
-            "Isso é um teste", "Continua sendo um teste", 0, 0)
+            print("O estudo %s foi cirado com ID %d" % ("teste", idStudy))
 
-        print(idStudy)
-        
-    elif controlFlow == "modify":
+    elif control_flow == "modify":
 
         idStudy = 271
 
         studies = getInfoFromStudy(0)
         print(studies)
+
+    elif control_flow == "upload":
+        prep_files()
 
     else:
         print("Programa encerrado.")

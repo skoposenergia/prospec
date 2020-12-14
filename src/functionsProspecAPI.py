@@ -14,6 +14,7 @@ from src.requestsProspecAPI import getFileFromAPI
 from src.requestsProspecAPI import getCompilationFromAPI
 from src.requestsProspecAPI import getFileFromS3viaAPI
 from src.requestsProspecAPI import sendFiles
+from src.requestsProspecAPI import patchInAPI
 
 # -----------------------------------------------------------------------------
 # Global variables | Variáveis globais
@@ -108,12 +109,14 @@ def getIdOfDECOMP(version):
 # Get list of DESSEM | Obter lista de DESSEM
 # -----------------------------------------------------------------------------
 
+
 def getListOfDESSEMs():
     return getInfoFromAPI(token, '/api/CepelModels/Dessems')
 
 # -----------------------------------------------------------------------------
 # Get list of DESSEM and choose one | Obter lista de DESSEM e escolher um
 # -----------------------------------------------------------------------------
+
 
 def getIdOfDESSEM(version):
     listOfDessem = getListOfDESSEMs()
@@ -129,6 +132,7 @@ def getIdOfDESSEM(version):
 # -----------------------------------------------------------------------------
 # Get list of GEVAZP | Obter lista de GEVAZP
 # -----------------------------------------------------------------------------
+
 
 def getListOfGEVAZPs():
     return getInfoFromAPI(token, '/api/CepelModels/Gevazps')
@@ -152,6 +156,7 @@ def getIdOfGEVAZP(version):
 # -----------------------------------------------------------------------------
 # Get list of Tags | Obter lista de marcadores
 # -----------------------------------------------------------------------------
+
 
 def getListOfTags():
     return getInfoFromAPI(token, '/api/prospectiveStudies/Tags')
@@ -334,6 +339,7 @@ def generateStudyDecks(idStudy, initialYear, initialMonth, duration, month,
 # Gerar próxima revisão
 # -----------------------------------------------------------------------------
 
+
 def generateNextRev(idStudy, newaveFile, decompFile, spreadsheetFile, tags):
 
     listOfTags = []
@@ -358,11 +364,12 @@ def generateNextRev(idStudy, newaveFile, decompFile, spreadsheetFile, tags):
     print(data)
 
     patchInAPI(token, '/api/prospectiveStudies/' + str(idStudy) + '/NextRev',
-              parameter, data)
+               parameter, data)
 
 # -----------------------------------------------------------------------------
 # Generate study with complete decks | Gerando estudo com decks completos
 # -----------------------------------------------------------------------------
+
 
 def completeStudyDecks(idStudy, fileName, tags):
 
@@ -435,6 +442,7 @@ def duplicateStudy(idStudy, title, description, tags, vazoesDat, vazoesRvx, prev
 # Adding tags to a study | Adicionar tags em um estudos
 # -----------------------------------------------------------------------------
 
+
 def addTags(idStudy, tags):
 
     listOfTags = []
@@ -452,11 +460,12 @@ def addTags(idStudy, tags):
     print(data)
 
     patchInAPI(token, '/api/prospectiveStudies/' + str(idStudy) + '/AddTags',
-              parameter, data)
+               parameter, data)
 
 # -----------------------------------------------------------------------------
 # Removing tags to a study | Remover tags em um estudos
 # -----------------------------------------------------------------------------
+
 
 def removeTags(idStudy, tags):
 
@@ -468,14 +477,14 @@ def removeTags(idStudy, tags):
         listOfTags.append(tagsConfiguration)
 
     parameter = ''
-    
+
     data = listOfTags
 
     print("Removendo tags do estudo: ", str(idStudy))
     print(data)
 
     patchInAPI(token, '/api/prospectiveStudies/' + str(idStudy) + '/RemoveTags',
-              parameter, data)
+               parameter, data)
 
 
 # -----------------------------------------------------------------------------
@@ -650,12 +659,13 @@ def downloadDecksOfStudy(idStudy, pathToDownload, fileName):
 
 # -----------------------------------------------------------------------------
 # Download File From Deck Results | Download de um arquivo de um resultado do deck
-# ----------------------------------------------------------------------------- 
+# -----------------------------------------------------------------------------
+
 
 def downloadFileFromDeck(idDeck, pathToDownload, fileNameDownload, fileNames):
     filesToGet = 'fileNames=' + '&fileNames='.join(fileNames)
-    response = getFileFromS3viaAPI(token, '/api/prospectiveStudies/DownloadResultFiles/' + str(idDeck) 
-                                + '?' + filesToGet, fileNameDownload, pathToDownload)
+    response = getFileFromS3viaAPI(token, '/api/prospectiveStudies/DownloadResultFiles/' + str(idDeck)
+                                   + '?' + filesToGet, fileNameDownload, pathToDownload)
 
 # -----------------------------------------------------------------------------
 # Download compilation | Download da compilação

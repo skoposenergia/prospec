@@ -3,8 +3,8 @@ from hashlib import sha1
 from os import unlink
 from pathlib import Path
 from shutil import copyfile
-from sincrawl.implementa import RunGEVAZP
 from zipfile import ZipFile
+from sincrawl.implementa import RunGEVAZP
 
 
 def get_files():
@@ -25,7 +25,7 @@ def files_rv():
 
 def get_newer_file(rv):
     h = sha1()
-
+    rv = rv.replace("RV", "REV")
     data = date.today() + timedelta(weeks=1)
     dias = 5 - int(data.isoweekday())
     data = data - timedelta(days=dias)
@@ -34,6 +34,7 @@ def get_newer_file(rv):
 
     url = "https://sintegre.ons.org.br/sites/9/13/79/_layouts/download.aspx?SourceUrl=/sites/9/13/79/Produtos/237" \
           "/Gevazp_%d%s_%s.zip" % infos
+
     h.update(url.encode('utf-8'))
 
     newest_file = h.hexdigest()
@@ -53,7 +54,8 @@ def files_cp(files, dst):
 
 def send_files(rv):
     matriz = ["REGRAS.DAT", "VAZOES.DAT", "MODIF.DAT", "POSTOS.DAT"]
-    ons_cp = ["REGRAS.DAT", "VAZOES.DAT", "MODIF.DAT", "POSTOS.DAT", "prevs.%s" % rv.upper()]
+    ons_cp = ["REGRAS.DAT", "VAZOES.DAT", "MODIF.DAT",
+              "POSTOS.DAT", "prevs.%s" % rv.upper()]
 
 
 def clear_full():
@@ -73,6 +75,3 @@ def main():
         extract_zip(file_dir)
 
     clear_full()
-
-
-main()
