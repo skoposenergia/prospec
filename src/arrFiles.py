@@ -4,13 +4,14 @@ from os import unlink
 from pathlib import Path
 from shutil import copyfile
 from zipfile import ZipFile
-import src.gpl
+from src.gpl import get_pluv
 from sincrawl.implementa import RunGEVAZP
 
 
 def get_files():
     spider_gevazp = RunGEVAZP()
     spider_gevazp.run()
+    get_pluv()
 
 
 def files_rv():
@@ -57,8 +58,8 @@ def send_files(rv):
     matriz = ["REGRAS.DAT", "VAZOES.DAT", "MODIF.DAT", "POSTOS.DAT"]
     ons_cp = ["REGRAS.DAT", "VAZOES.DAT", "MODIF.DAT",
               "POSTOS.DAT", "prevs.%s" % rv]
-    con_dir = lambda arq : ("full/Gevazp" ++ arq)
-    cp = map(con_dir, ons_cp)
+    gen_dir = lambda arq : ("full/Gevazp" ++ arq)
+    cp = map(gen_dir, ons_cp)
     print(cp)
 
 
@@ -77,5 +78,5 @@ def main():
     else:
         file_dir = get_newer_file(rv)
         extract_zip(file_dir)
-
+        send_files(rv)
     clear_full()
