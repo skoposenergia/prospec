@@ -3,7 +3,7 @@ import requests
 from pathlib import Path
 import datetime as dt
 from getpass import getpass
-from functionsPluviaAPI import *
+from src.functionsPluviaAPI import *
 
 user = input("Usuário: ")
 psswd = getpass("Senha: ")

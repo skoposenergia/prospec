@@ -4,6 +4,7 @@ from os import unlink
 from pathlib import Path
 from shutil import copyfile
 from zipfile import ZipFile
+import src.gpl
 from sincrawl.implementa import RunGEVAZP
 
 
@@ -55,7 +56,10 @@ def files_cp(files, dst):
 def send_files(rv):
     matriz = ["REGRAS.DAT", "VAZOES.DAT", "MODIF.DAT", "POSTOS.DAT"]
     ons_cp = ["REGRAS.DAT", "VAZOES.DAT", "MODIF.DAT",
-              "POSTOS.DAT", "prevs.%s" % rv.upper()]
+              "POSTOS.DAT", "prevs.%s" % rv]
+    con_dir = lambda arq : ("full/Gevazp" ++ arq)
+    cp = map(con_dir, ons_cp)
+    print(cp)
 
 
 def clear_full():

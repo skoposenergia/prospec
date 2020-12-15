@@ -13,6 +13,8 @@ def main():
 
     print("Foram feitas %s requisições até o momento." % numRequests)
 
+    prep_files()
+
     control_flow = input("create, modify or upload: ")
 
     if control_flow == "create":
@@ -21,7 +23,7 @@ def main():
         if choice == 1:
             idStudy = 0
             # idStudy = createStudy(
-            #     "Isso é um teste", "Continua sendo um teste", 0, 0)
+            #     "Curtíssimo prazo", "", 0, 0)
 
             print("O estudo %s foi cirado com ID %d" % ("teste", idStudy))
 
@@ -31,9 +33,6 @@ def main():
 
         studies = getInfoFromStudy(0)
         print(studies)
-
-    elif control_flow == "upload":
-        prep_files()
 
     else:
         print("Programa encerrado.")
