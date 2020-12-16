@@ -18,14 +18,17 @@ def main():
     control_flow = input("create, modify or upload: ")
 
     if control_flow == "create":
-        choice = input("Qual o estudo que deseja?\n1- Curtísimo prazo")
+        choice = input("Qual o estudo que deseja?\n1- Curtísimo prazo\n")
         choice = int(choice)
         if choice == 1:
             idStudy = 0
+            nameStudy = "Curtíssimo prazo"
             # idStudy = createStudy(
             #     "Curtíssimo prazo", "", 0, 0)
+            with open("estudos_criados", 'w') as fp:
+                fp.write("ID: %d, Nome: %s" % (idStudy, nameStudy))
 
-            print("O estudo %s foi cirado com ID %d" % ("teste", idStudy))
+            print("O estudo %s foi criado com ID %d" % (nameStudy, idStudy))
 
     elif control_flow == "modify":
 

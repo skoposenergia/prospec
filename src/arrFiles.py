@@ -11,7 +11,6 @@ from sincrawl.implementa import RunGEVAZP
 def get_files():
     spider_gevazp = RunGEVAZP()
     spider_gevazp.run()
-    get_pluv()
 
 
 def files_rv():
@@ -51,16 +50,15 @@ def extract_zip(file_dir):
 
 def files_cp(files, dst):
     for item in files:
-        copyfile(item, dst)
+        copyfile("full/Gevazp/" + item, dst + item)
 
 
 def send_files(rv):
     matriz = ["REGRAS.DAT", "VAZOES.DAT", "MODIF.DAT", "POSTOS.DAT"]
     ons_cp = ["REGRAS.DAT", "VAZOES.DAT", "MODIF.DAT",
               "POSTOS.DAT", "prevs.%s" % rv]
-    gen_dir = lambda arq : ("full/Gevazp" ++ arq)
-    cp = map(gen_dir, ons_cp)
-    print(cp)
+
+    files_cp(ons_cp, "CP/ONS/GEVAZP/")
 
 
 def clear_full():
@@ -73,6 +71,8 @@ def clear_full():
 def main():
     get_files()
     rv = files_rv()
+    get_pluv()
+
     if rv == "":
         print("Não existem GEVAZPs desse mês operativo disponíveis no momento")
     else:
