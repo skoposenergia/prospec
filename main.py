@@ -1,12 +1,8 @@
-from src.functionsProspecAPI import *
-import requests
-from pathlib import Path
-import json
 from src.arrFiles import main as prep_files
+from src.functionsProspecAPI import *
 
 
 def main():
-
     authenticateProspec("daniel.mazucanti@skoposenergia.com.br", "Skopos2020")
 
     numRequests = getNumberOfRequests()
@@ -25,8 +21,8 @@ def main():
             nameStudy = "Curtíssimo prazo"
             # idStudy = createStudy(
             #     "Curtíssimo prazo", "", 0, 0)
-            with open("estudos_criados", 'w') as fp:
-                fp.write("ID: %d, Nome: %s" % (idStudy, nameStudy))
+            with open("estudos_criados", 'a') as fp:
+                fp.write("ID: %d, Nome: %s\n" % (idStudy, nameStudy))
 
             print("O estudo %s foi criado com ID %d" % (nameStudy, idStudy))
 

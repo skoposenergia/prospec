@@ -15,7 +15,7 @@ def get_pluv():
 
     token = authenticatePluvia(user, psswd)
 
-    precipitationDataSources = ["GEFS", "CFS", "ECMWF_ENS", "ONS", "ECMWF_ENS_EXT"]
+    precipitationDataSources = ["GEFS", "ECMWF_ENS", "ONS"]
     forecastModels = ['IA+SMAP']
 
     for precipitationDataSource in precipitationDataSources:
@@ -30,7 +30,8 @@ def get_pluv():
     form_dir = curr_day.strftime("%Y-%m-%d")
 
     dir_download = Path('full/%s/' % form_dir)
-
+    if not (dir_download.exists()):
+        Path.mkdir(dir_download)
     forecasts = getForecasts(forecastdate, id_maps,
                             id_models, '', '', [curr_day.year], [])
 

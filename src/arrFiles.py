@@ -2,10 +2,11 @@ from datetime import timedelta, date
 from hashlib import sha1
 from os import unlink
 from pathlib import Path
-from shutil import copyfile
+from shutil import copy
 from zipfile import ZipFile
-from src.gpl import get_pluv
+
 from sincrawl.implementa import RunGEVAZP
+from src.gpl import get_pluv
 
 
 def get_files():
@@ -50,7 +51,7 @@ def extract_zip(file_dir):
 
 def files_cp(files, dst):
     for item in files:
-        copyfile("full/Gevazp/" + item, dst + item)
+        copy(item, dst)
 
 
 def send_files(rv):
@@ -58,7 +59,13 @@ def send_files(rv):
     ons_cp = ["REGRAS.DAT", "VAZOES.DAT", "MODIF.DAT",
               "POSTOS.DAT", "prevs.%s" % rv]
 
+    matriz = ["full/Gevazp" + x for x in matriz]
+    ons_cp = ["full/Gevazp" + x for x in ons_cp]
+
     files_cp(ons_cp, "CP/ONS/GEVAZP/")
+    files_cp((ons_cp, "CP/Curtissimo/GEVAZP"))
+    files_cp(matriz, "CP/Matriz/GEVAZP")
+    files_cp(matriz, "CP/Matriz/GEVAZP")
 
 
 def clear_full():
