@@ -59,8 +59,8 @@ def send_files(rv):
     ons_cp = ["REGRAS.DAT", "VAZOES.DAT", "MODIF.DAT",
               "POSTOS.DAT", "prevs.%s" % rv]
 
-    matriz = ["full/Gevazp" + x for x in matriz]
-    ons_cp = ["full/Gevazp" + x for x in ons_cp]
+    matriz = ["full/Gevazp/" + x for x in matriz]
+    ons_cp = ["full/Gevazp/" + x for x in ons_cp]
 
     files_cp(ons_cp, "CP/ONS/GEVAZP/")
     files_cp((ons_cp, "CP/Curtissimo/GEVAZP"))

@@ -33,7 +33,7 @@ def get_pluv():
     if not (dir_download.exists()):
         Path.mkdir(dir_download)
     forecasts = getForecasts(forecastdate, id_maps,
-                            id_models, '', '', [curr_day.year], [])
+                            id_models, '', '', [curr_day.year], ["ENSEMBLE"])
 
     for forecast in forecasts:
         downloadForecast(forecast['prevsId'], dir_download,

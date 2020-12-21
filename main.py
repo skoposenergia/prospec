@@ -11,27 +11,28 @@ def main():
 
     prep_files()
 
-    control_flow = input("create, modify or upload: ")
+    control_flow = input("<criar>, fazer <upload> de arquivos ou <rodar> estudo: ")
 
-    if control_flow == "create":
+    if control_flow == "criar":
         choice = input("Qual o estudo que deseja?\n1- Curtísimo prazo\n")
         choice = int(choice)
         if choice == 1:
             idStudy = 0
             nameStudy = "Curtíssimo prazo"
-            # idStudy = createStudy(
-            #     "Curtíssimo prazo", "", 0, 0)
+
             with open("estudos_criados", 'a') as fp:
                 fp.write("ID: %d, Nome: %s\n" % (idStudy, nameStudy))
 
             print("O estudo %s foi criado com ID %d" % (nameStudy, idStudy))
 
-    elif control_flow == "modify":
+    elif control_flow == "upload":
+        print("Esses são os estudos criados até então:")
+        with open("estudos criados", 'r') as fp:
+            for line in fp:
+                print(line)
 
-        idStudy = 271
+        int(input("Qual o estudo que deseja enviar os arquivos?\n"))
 
-        studies = getInfoFromStudy(0)
-        print(studies)
 
     else:
         print("Programa encerrado.")
