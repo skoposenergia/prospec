@@ -20,7 +20,7 @@ def main():
             idStudy = 0
             nameStudy = "Curtíssimo prazo"
 
-            with open("estudos_criados", 'a') as fp:
+            with open("estudos criados", 'a') as fp:
                 fp.write("ID: %d, Nome: %s\n" % (idStudy, nameStudy))
 
             print("O estudo %s foi criado com ID %d" % (nameStudy, idStudy))

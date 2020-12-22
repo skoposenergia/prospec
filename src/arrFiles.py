@@ -63,9 +63,9 @@ def send_files(rv):
     ons_cp = ["full/Gevazp/" + x for x in ons_cp]
 
     files_cp(ons_cp, "CP/ONS/GEVAZP/")
-    files_cp((ons_cp, "CP/Curtissimo/GEVAZP"))
-    files_cp(matriz, "CP/Matriz/GEVAZP")
-    files_cp(matriz, "CP/Matriz/GEVAZP")
+    files_cp(ons_cp, "CP/Curtissimo/GEVAZP/")
+    files_cp(matriz, "CP/Matriz/GEVAZP/")
+    files_cp(matriz, "CP/Matriz/GEVAZP/")
 
 
 def clear_full():
