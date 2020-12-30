@@ -1,29 +1,38 @@
+import src.functionsProspecAPI as prospec
 from src.arrFiles import main as prep_files
-from src.functionsProspecAPI import *
 
 
-def main():
-    authenticateProspec("daniel.mazucanti@skoposenergia.com.br", "Skopos2020")
+def update_study():
+    pass
 
-    numRequests = getNumberOfRequests()
 
-    print("Foram feitas %s requisições até o momento." % numRequests)
+def create_study(idStudy, nameStudy):
+    with open("estudos criados", 'a') as fp:
+        fp.write("ID: %d, Nome: %s\n" % (idStudy, nameStudy))
 
-    prep_files()
+    idStudy = prospec.createStudy(nameStudy, "", 0, 0)
 
+    print("O estudo %s foi criado com ID %d" % (nameStudy, idStudy))
+
+
+def menu():
     control_flow = input("<criar>, fazer <upload> de arquivos ou <rodar> estudo: ")
 
     if control_flow == "criar":
-        choice = input("Qual o estudo que deseja?\n1- Curtísimo prazo\n")
+        choice = input("Qual o estudo que deseja?\n1- Curtísimo prazo\n2- ONS CP\n3- Matriz CP")
         choice = int(choice)
+
         if choice == 1:
             idStudy = 0
             nameStudy = "Curtíssimo prazo"
 
-            with open("estudos criados", 'a') as fp:
-                fp.write("ID: %d, Nome: %s\n" % (idStudy, nameStudy))
+            create_study(idStudy, nameStudy)
 
-            print("O estudo %s foi criado com ID %d" % (nameStudy, idStudy))
+        elif choice < 4:
+            print("Opção em implementação.")
+
+        else:
+            print("Opção inválida.")
 
     elif control_flow == "upload":
         print("Esses são os estudos criados até então:")
@@ -31,11 +40,21 @@ def main():
             for line in fp:
                 print(line)
 
-        int(input("Qual o estudo que deseja enviar os arquivos?\n"))
-
+        int(input("Para qual estudo deseja enviar os arquivos?\n"))
+        prep_files()
 
     else:
         print("Programa encerrado.")
+
+
+def main():
+    prospec.authenticateProspec("daniel.mazucanti@skoposenergia.com.br", "Skopos2020")
+
+    numRequests = prospec.getNumberOfRequests()
+
+    print("Foram feitas %s requisições até o momento." % numRequests)
+
+    menu()
 
 
 main()

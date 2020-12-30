@@ -6,7 +6,7 @@ from shutil import copy
 from zipfile import ZipFile
 
 from sincrawl.implementa import RunGEVAZP
-from src.gpl import get_pluv
+from src.gpl import get_pluv, get_dates
 
 
 def get_files():
@@ -54,7 +54,7 @@ def files_cp(files, dst):
         copy(item, dst)
 
 
-def send_files(rv):
+def send_gevazp(rv):
     matriz = ["REGRAS.DAT", "VAZOES.DAT", "MODIF.DAT", "POSTOS.DAT"]
     ons_cp = ["REGRAS.DAT", "VAZOES.DAT", "MODIF.DAT",
               "POSTOS.DAT", "prevs.%s" % rv]
@@ -68,6 +68,14 @@ def send_files(rv):
     files_cp(matriz, "CP/Matriz/GEVAZP/")
 
 
+def extract_prevs():
+    _, dir_download, _ = get_dates()
+    pluvia_zips = [file for file in dir_download if file.stem == ".zip"]
+    for pzip in pluvia_zips:
+        extract_zip(pzip)
+
+
+
 def clear_full():
     files = Path("full/").glob("**/*")
     files_dir = [item for item in files if item.is_file()]
@@ -79,11 +87,12 @@ def main():
     get_files()
     rv = files_rv()
     get_pluv()
+    extract_prevs()
 
     if rv == "":
         print("Não existem GEVAZPs desse mês operativo disponíveis no momento")
     else:
         file_dir = get_newer_file(rv)
         extract_zip(file_dir)
-        send_files(rv)
+        send_gevazp(rv)
     clear_full()

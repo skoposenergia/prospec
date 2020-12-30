@@ -23,7 +23,6 @@ global token
 def authenticatePluvia(username, password):
     global token
     token = getToken(username, password)
-    return token
 
 # -----------------------------------------------------------------------------
 # Get list of Precitation Data Source | Obter lista de Fonte de Dados de Precipitação
