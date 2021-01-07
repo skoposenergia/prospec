@@ -66,14 +66,15 @@ def send_gevazp(rv):
     files_cp(ons_cp, "CP/Curtissimo/GEVAZP/")
     files_cp(matriz, "CP/Matriz/GEVAZP/")
     files_cp(matriz, "CP/Matriz/GEVAZP/")
+    files_cp(ons_cp, "CP/Curtissimo/GEVAZP/")
 
 
 def extract_prevs():
-    _, dir_download, _ = get_dates()
-    pluvia_zips = [file for file in dir_download if file.stem == ".zip"]
+    dir_download = get_dates()
+    pluvia_zips = [file for file in dir_download[1].glob("**/*") if file.stem == ".zip"]
     for pzip in pluvia_zips:
+        print(pzip)
         extract_zip(pzip)
-
 
 
 def clear_full():
@@ -90,9 +91,9 @@ def main():
     extract_prevs()
 
     if rv == "":
-        print("Não existem GEVAZPs desse mês operativo disponíveis no momento")
+        print("Ainda não existem GEVAZPs desse mês operativo disponíveis no momento")
     else:
         file_dir = get_newer_file(rv)
         extract_zip(file_dir)
         send_gevazp(rv)
-    clear_full()
+    # clear_full()
