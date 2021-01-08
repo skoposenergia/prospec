@@ -1,8 +1,7 @@
-import json
-import requests
-from pathlib import Path
 import datetime as dt
 from getpass import getpass
+from pathlib import Path
+
 from src.functionsPluviaAPI import *
 
 

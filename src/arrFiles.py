@@ -71,7 +71,7 @@ def send_gevazp(rv):
 
 def extract_prevs():
     dir_download = get_dates()
-    pluvia_zips = [file for file in dir_download[1].glob("**/*") if file.stem == ".zip"]
+    pluvia_zips = [file for file in dir_download[1].glob("**/*") if file.suffix == ".zip"]
     for pzip in pluvia_zips:
         print(pzip)
         extract_zip(pzip)
