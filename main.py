@@ -1,50 +1,43 @@
-import src.functionsProspecAPI as prospec
+from src import functionsProspecAPI as prospec
 from src.arrFiles import main as prep_files
 
 
-def update_study():
-    pass
+def create_study(nameStudy):
+    idStudy = prospec.createStudy(nameStudy, "", 0, 0)
 
-
-def create_study(idStudy, nameStudy):
     with open("estudos criados", 'a') as fp:
         fp.write("ID: %d, Nome: %s\n" % (idStudy, nameStudy))
-
-    idStudy = prospec.createStudy(nameStudy, "", 0, 0)
 
     print("O estudo %s foi criado com ID %d" % (nameStudy, idStudy))
 
 
-def menu():
-    control_flow = input("<criar>, fazer <upload> de arquivos ou <rodar> estudo: ")
+def upload_files(idStudy, path):
+    prospec.sendAllPrevsToStudy(idStudy, path)
 
-    if control_flow == "criar":
-        choice = input("Qual o estudo que deseja?\n1- Curtísimo prazo\n2- ONS CP\n3- Matriz CP")
-        choice = int(choice)
 
-        if choice == 1:
-            idStudy = 0
-            nameStudy = "Curtíssimo prazo"
+def display_studies():
+    print("Esses são os estudos criados até então:")
+    with open("estudos criados", 'r') as fp:
+        for line in fp:
+            print(line)
 
-            create_study(idStudy, nameStudy)
 
-        elif choice < 4:
-            print("Opção em implementação.")
+def model_params():
+    nameStudy = ""
+    path_of_opt = ""
+    choice = input("Qual o tipo de estudo que deseja?\n1- Curtísimo prazo\n2- ONS CP\n3- Matriz CP")
+    choice = int(choice)
+    if choice == 1:
+        nameStudy = "Curtíssimo prazo"
+        path_of_opt = "CP/Curtissimo"
 
-        else:
-            print("Opção inválida.")
-
-    elif control_flow == "upload":
-        print("Esses são os estudos criados até então:")
-        with open("estudos criados", 'r') as fp:
-            for line in fp:
-                print(line)
-
-        int(input("Para qual estudo deseja enviar os arquivos?\n"))
-        prep_files()
+    elif choice < 4:
+        print("Opção em implementação.")
 
     else:
-        print("Programa encerrado.")
+        print("Opção inválida.")
+
+    return nameStudy, path_of_opt
 
 
 def main():
@@ -54,7 +47,41 @@ def main():
 
     print("Foram feitas %s requisições até o momento." % numRequests)
 
-    menu()
+    control_flow = input("<criar>, fazer <upload> de arquivos, <parar> ou <rodar> estudo: ")
+    if control_flow == "criar":
+
+        nameStudy, path_opt = model_params()
+
+        create_study(nameStudy)
+
+    elif control_flow == "upload":
+
+        nameStudy, path_model = model_params()
+        path_prevs = path_model + "/prevs/"
+        display_studies()
+
+        uploadId = int(input("Para qual estudo deseja enviar os arquivos?\n"))
+        prep_files()
+        upload_files(uploadId, path_prevs)
+
+    elif control_flow == "rodar":
+        name, path = model_params()
+
+        display_studies()
+
+        runId = int(input("Qual estudo deseja rodar?\n"))
+
+        prospec.generateNextRev(runId, "", "", path + "Dados_Prospectivo.xlsx")
+
+
+
+    elif control_flow == "parar":
+        display_studies()
+        stopId = int(input("Qual estudo deseja parar?\n"))
+        prospec.abortExecution(stopId)
+
+    else:
+        print("Programa encerrado.")
 
 
 main()

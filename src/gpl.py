@@ -1,12 +1,11 @@
 import datetime as dt
-from getpass import getpass
 from pathlib import Path
 
 from src.functionsPluviaAPI import *
 
 
-def get_pluv():
-    auth()
+def get_pluv(user, passwd):
+    auth(user, passwd)
 
     id_maps, id_models = get_ids()
 
@@ -18,9 +17,7 @@ def get_pluv():
     download_files(curr_day, dir_download, forecastdate, id_maps, id_models)
 
 
-def auth():
-    user = input("Usuário: ")
-    psswd = getpass("Senha: ")
+def auth(user, psswd):
     authenticatePluvia(user, psswd)
 
 

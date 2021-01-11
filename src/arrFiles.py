@@ -4,6 +4,7 @@ from os import unlink
 from pathlib import Path
 from shutil import copy
 from zipfile import ZipFile
+from getpass import getpass
 
 from sincrawl.implementa import RunGEVAZP
 from src.gpl import get_pluv, get_dates
@@ -73,7 +74,6 @@ def extract_prevs():
     dir_download = get_dates()
     pluvia_zips = [file for file in dir_download[1].glob("**/*") if file.suffix == ".zip"]
     for pzip in pluvia_zips:
-        print(pzip)
         extract_zip(pzip)
 
 
@@ -84,11 +84,18 @@ def clear_full():
         unlink(item)
 
 
+def send_prevs():
+    dst = "CP/Curtissimo/prevs"
+    prevs_files = [file for file in Path("full").glob("**/*") if "rv" in file.suffix]
+    for prev in prevs_files:
+        copy(prev, dst)
+
+
 def main():
+    user = input("Usuário Pluvia: ")
+    password = getpass("Senha: ")
     get_files()
     rv = files_rv()
-    get_pluv()
-    extract_prevs()
 
     if rv == "":
         print("Ainda não existem GEVAZPs desse mês operativo disponíveis no momento")
@@ -96,4 +103,8 @@ def main():
         file_dir = get_newer_file(rv)
         extract_zip(file_dir)
         send_gevazp(rv)
-    # clear_full()
+    clear_full()
+    get_pluv(user, password)
+    extract_prevs()
+    send_prevs()
+    clear_full()
