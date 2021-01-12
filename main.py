@@ -1,5 +1,6 @@
 from src import functionsProspecAPI as prospec
 from src.arrFiles import main as prep_files
+from pathlib import Path
 
 
 def create_study(nameStudy):
@@ -9,10 +10,6 @@ def create_study(nameStudy):
         fp.write("ID: %d, Nome: %s\n" % (idStudy, nameStudy))
 
     print("O estudo %s foi criado com ID %d" % (nameStudy, idStudy))
-
-
-def upload_files(idStudy, path):
-    prospec.sendAllPrevsToStudy(idStudy, path)
 
 
 def display_studies():
@@ -47,41 +44,55 @@ def main():
 
     print("Foram feitas %s requisições até o momento." % numRequests)
 
-    control_flow = input("<criar>, fazer <upload> de arquivos, <parar> ou <rodar> estudo: ")
-    if control_flow == "criar":
+    idServer = prospec.getIdOfServer("c5.24xlarge")
+    idQueue = prospec.getIdOfFirstQueueOfServer("c5.24xlarge")
 
-        nameStudy, path_opt = model_params()
+    while True:
+        control_flow = input('1- Criar estudo\n2- Upload de arquivos\n3- Rodar estudo\n4- Abortar execução\n5- '
+                             'Informações do estudo\n0- Sair\n')
+        if control_flow == "1":
 
-        create_study(nameStudy)
+            nameStudy, path_opt = model_params()
 
-    elif control_flow == "upload":
+            create_study(nameStudy)
 
-        nameStudy, path_model = model_params()
-        path_prevs = path_model + "/prevs/"
-        display_studies()
+        elif control_flow == "2":
 
-        uploadId = int(input("Para qual estudo deseja enviar os arquivos?\n"))
-        prep_files()
-        upload_files(uploadId, path_prevs)
+            nameStudy, path_model = model_params()
+            path_prevs = path_model + "/prevs/"
+            path_gevazp = path_model + "/GEVAZP/"
 
-    elif control_flow == "rodar":
-        name, path = model_params()
+            display_studies()
 
-        display_studies()
+            uploadId = int(input("Para qual estudo deseja enviar os arquivos?\n"))
+            prep_files()
+            prospec.sendPrevsToStudy(uploadId, path_prevs)
+            for file in Path(path_gevazp).glob("**/*"):
+                prospec.sendFileToDeck(uploadId, "", file, file.name)
+            prospec.sendFileToDeck()
 
-        runId = int(input("Qual estudo deseja rodar?\n"))
+        elif control_flow == "3":
+            name, path = model_params()
 
-        prospec.generateNextRev(runId, "", "", path + "Dados_Prospectivo.xlsx")
+            display_studies()
 
+            runId = int(input("Qual estudo deseja rodar?\n"))
 
+            prospec.generateNextRev(runId, "", "", path + "Dados_Prospectivo.xlsx", "")
 
-    elif control_flow == "parar":
-        display_studies()
-        stopId = int(input("Qual estudo deseja parar?\n"))
-        prospec.abortExecution(stopId)
+        elif control_flow == "4":
+            display_studies()
+            stopId = int(input("Qual estudo deseja parar?\n"))
+            prospec.abortExecution(stopId)
 
-    else:
-        print("Programa encerrado.")
+        elif control_flow == "5":
+            display_studies()
+            infoId = input("Qual estudo deseja?\n")
+            print(prospec.getInfoFromStudy(infoId))
+
+        else:
+            print("Programa encerrado.")
+            break
 
 
 main()
