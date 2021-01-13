@@ -19,10 +19,17 @@ def display_studies():
             print(line)
 
 
+def get_paths(path_model):
+    path_prevs = path_model + "/prevs/"
+    path_gevazp = path_model + "/GEVAZP/"
+    return path_prevs, path_gevazp
+
+
 def model_params():
     nameStudy = ""
     path_of_opt = ""
-    choice = input("Qual o tipo de estudo que deseja?\n1- Curtísimo prazo\n2- ONS CP\n3- Matriz CP")
+    choice = input(
+        "Qual o tipo de estudo que deseja?\n1- Curtísimo prazo\n2- ONS CP\n3- Matriz CP")
     choice = int(choice)
     if choice == 1:
         nameStudy = "Curtíssimo prazo"
@@ -38,7 +45,8 @@ def model_params():
 
 
 def main():
-    prospec.authenticateProspec("daniel.mazucanti@skoposenergia.com.br", "Skopos2020")
+    prospec.authenticateProspec(
+        "daniel.mazucanti@skoposenergia.com.br", "Skopos2020")
 
     numRequests = prospec.getNumberOfRequests()
 
@@ -59,12 +67,12 @@ def main():
         elif control_flow == "2":
 
             nameStudy, path_model = model_params()
-            path_prevs = path_model + "/prevs/"
-            path_gevazp = path_model + "/GEVAZP/"
+            path_prevs, path_gevazp = get_paths(path_model)
 
             display_studies()
 
-            uploadId = int(input("Para qual estudo deseja enviar os arquivos?\n"))
+            uploadId = int(
+                input("Para qual estudo deseja enviar os arquivos?\n"))
             prep_files()
             prospec.sendPrevsToStudy(uploadId, path_prevs)
             for file in Path(path_gevazp).glob("**/*"):
@@ -78,7 +86,8 @@ def main():
 
             runId = int(input("Qual estudo deseja rodar?\n"))
 
-            prospec.generateNextRev(runId, "", "", path + "Dados_Prospectivo.xlsx", "")
+            prospec.generateNextRev(
+                runId, "", "", path + "Dados_Prospectivo.xlsx", "")
 
         elif control_flow == "4":
             display_studies()
@@ -88,7 +97,8 @@ def main():
         elif control_flow == "5":
             display_studies()
             infoId = input("Qual estudo deseja?\n")
-            print(prospec.getInfoFromStudy(infoId))
+            infoStudy = prospec.getInfoFromStudy(infoId)
+            print(infoStudy)
 
         else:
             print("Programa encerrado.")
