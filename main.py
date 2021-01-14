@@ -29,7 +29,7 @@ def model_params():
     nameStudy = ""
     path_of_opt = ""
     choice = input(
-        "Qual o tipo de estudo que deseja?\n1- Curtísimo prazo\n2- ONS CP\n3- Matriz CP")
+        "Qual o tipo de estudo que deseja?\n1- Curtísimo prazo\n2- ONS CP\n3- Matriz CP\n")
     choice = int(choice)
     if choice == 1:
         nameStudy = "Curtíssimo prazo"
@@ -74,10 +74,7 @@ def main():
             uploadId = int(
                 input("Para qual estudo deseja enviar os arquivos?\n"))
             prep_files()
-            prospec.sendPrevsToStudy(uploadId, path_prevs)
-            for file in Path(path_gevazp).glob("**/*"):
-                prospec.sendFileToDeck(uploadId, "", file, file.name)
-            prospec.sendFileToDeck()
+            newmethod181(uploadId, path_prevs, path_gevazp)
 
         elif control_flow == "3":
             name, path = model_params()
@@ -103,6 +100,12 @@ def main():
         else:
             print("Programa encerrado.")
             break
+
+def newmethod181(uploadId, path_prevs, path_gevazp):
+    prospec.sendPrevsToStudy(uploadId, path_prevs)
+    for file in Path(path_gevazp).glob("**/*"):
+        prospec.sendFileToDeck(uploadId, "", file, file.name)
+    prospec.sendFileToDeck()
 
 
 main()
