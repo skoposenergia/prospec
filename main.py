@@ -3,47 +3,6 @@ from src.arrFiles import main as prep_files
 from pathlib import Path
 
 
-def create_study(nameStudy):
-    idStudy = prospec.createStudy(nameStudy, "", 0, 0)
-
-    with open("estudos criados", 'a') as fp:
-        fp.write("ID: %d, Nome: %s\n" % (idStudy, nameStudy))
-
-    print("O estudo %s foi criado com ID %d" % (nameStudy, idStudy))
-
-
-def display_studies():
-    print("Esses são os estudos criados até então:")
-    with open("estudos criados", 'r') as fp:
-        for line in fp:
-            print(line)
-
-
-def get_paths(path_model):
-    path_prevs = path_model + "/prevs/"
-    path_gevazp = path_model + "/GEVAZP/"
-    return path_prevs, path_gevazp
-
-
-def model_params():
-    nameStudy = ""
-    path_of_opt = ""
-    choice = input(
-        "Qual o tipo de estudo que deseja?\n1- Curtísimo prazo\n2- ONS CP\n3- Matriz CP\n")
-    choice = int(choice)
-    if choice == 1:
-        nameStudy = "Curtíssimo prazo"
-        path_of_opt = "CP/Curtissimo"
-
-    elif choice < 4:
-        print("Opção em implementação.")
-
-    else:
-        print("Opção inválida.")
-
-    return nameStudy, path_of_opt
-
-
 def main():
     prospec.authenticateProspec(
         "daniel.mazucanti@skoposenergia.com.br", "Skopos2020")
@@ -67,14 +26,13 @@ def main():
         elif control_flow == "2":
 
             nameStudy, path_model = model_params()
-            path_prevs, path_gevazp = get_paths(path_model)
 
             display_studies()
 
             uploadId = int(
                 input("Para qual estudo deseja enviar os arquivos?\n"))
             prep_files()
-            newmethod181(uploadId, path_prevs, path_gevazp)
+            upload_files(uploadId, path_model)
 
         elif control_flow == "3":
             name, path = model_params()
@@ -101,11 +59,55 @@ def main():
             print("Programa encerrado.")
             break
 
-def newmethod181(uploadId, path_prevs, path_gevazp):
-    prospec.sendPrevsToStudy(uploadId, path_prevs)
+
+def upload_files(uploadId, path):
+    path_gevazp = path + "/GEVAZP/"
+    path_decks = path + "/Decks/"
+    path_prevs = path + "/prevs/"
+
+    for file in Path(path_decks).glob("**/*"):
+        if file.suffix == ".zip":
+            prospec.sendFileToStudy(uploadId, file, file.name)
+
     for file in Path(path_gevazp).glob("**/*"):
         prospec.sendFileToDeck(uploadId, "", file, file.name)
-    prospec.sendFileToDeck()
+
+    prospec.sendPrevsToStudy(uploadId, path_prevs)
+
+
+def create_study(nameStudy):
+    idStudy = prospec.createStudy(nameStudy, "", 0, 0)
+
+    with open("estudos criados", 'a') as fp:
+        fp.write("ID: %d, Nome: %s\n" % (idStudy, nameStudy))
+
+    print("O estudo %s foi criado com ID %d" % (nameStudy, idStudy))
+
+
+def display_studies():
+    print("Esses são os estudos criados até então:")
+    with open("estudos criados", 'r') as fp:
+        for line in fp:
+            print(line)
+
+
+def model_params():
+    nameStudy = ""
+    path_of_opt = ""
+    choice = input(
+        "Qual o tipo de estudo que deseja?\n1- Curtísimo prazo\n2- ONS CP\n3- Matriz CP\n")
+    choice = int(choice)
+    if choice == 1:
+        nameStudy = "Curtíssimo prazo"
+        path_of_opt = "CP/Curtissimo"
+
+    elif choice < 4:
+        print("Opção em implementação.")
+
+    else:
+        print("Opção inválida.")
+
+    return nameStudy, path_of_opt
 
 
 main()
