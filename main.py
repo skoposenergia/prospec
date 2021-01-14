@@ -29,20 +29,14 @@ def main():
 
             display_studies()
 
-            uploadId = int(
-                input("Para qual estudo deseja enviar os arquivos?\n"))
-            prep_files()
-            upload_files(uploadId, path_model)
+            upload_files(path_model)
 
         elif control_flow == "3":
             name, path = model_params()
 
             display_studies()
 
-            runId = int(input("Qual estudo deseja rodar?\n"))
-
-            prospec.generateNextRev(
-                runId, "", "", path + "Dados_Prospectivo.xlsx", "")
+            runStudy(path)
 
         elif control_flow == "4":
             display_studies()
@@ -50,20 +44,26 @@ def main():
             prospec.abortExecution(stopId)
 
         elif control_flow == "5":
-            display_studies()
-            infoId = input("Qual estudo deseja?\n")
-            infoStudy = prospec.getInfoFromStudy(infoId)
-            print(infoStudy)
+            studiesInfo()
 
         else:
             print("Programa encerrado.")
             break
 
+def runStudy(path):
+    runId = int(input("Qual estudo deseja rodar?\n"))
 
-def upload_files(uploadId, path):
-    path_gevazp = path + "/GEVAZP/"
-    path_decks = path + "/Decks/"
-    path_prevs = path + "/prevs/"
+    prospec.generateNextRev(
+        runId, "1", "1", path + "/Dados_Prospectivo.xlsx", "")
+
+
+def upload_files(path_model):
+    uploadId = int(
+        input("Para qual estudo deseja enviar os arquivos?\n"))
+    prep_files()
+    path_gevazp = path_model + "/GEVAZP/"
+    path_decks = path_model + "/Decks/"
+    path_prevs = path_model + "/prevs/"
 
     for file in Path(path_decks).glob("**/*"):
         if file.suffix == ".zip":
@@ -75,13 +75,23 @@ def upload_files(uploadId, path):
     prospec.sendPrevsToStudy(uploadId, path_prevs)
 
 
+def studiesInfo():
+    display_studies()
+    infoId = input("Qual estudo deseja?\n")
+    infoStudy = prospec.getInfoFromStudy(infoId)
+    if infoStudy == None:
+        print("Esse estudo não está mais na plataforma!")
+    else:
+        print(infoStudy)
+
+
 def create_study(nameStudy):
     idStudy = prospec.createStudy(nameStudy, "", 0, 0)
 
     with open("estudos criados", 'a') as fp:
-        fp.write("ID: %d, Nome: %s\n" % (idStudy, nameStudy))
+        fp.write("ID: %s, Nome: %s\n" % (idStudy, nameStudy))
 
-    print("O estudo %s foi criado com ID %d" % (nameStudy, idStudy))
+    print("O estudo %s foi criado com ID %s" % (nameStudy, idStudy))
 
 
 def display_studies():
