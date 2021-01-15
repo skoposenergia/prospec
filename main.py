@@ -1,6 +1,7 @@
 from src import functionsProspecAPI as prospec
 from src.arrFiles import main as prep_files
 from pathlib import Path
+import datetime as dt
 
 
 def main():
@@ -15,8 +16,8 @@ def main():
     idQueue = prospec.getIdOfFirstQueueOfServer("c5.24xlarge")
 
     while True:
-        control_flow = input('1- Criar estudo\n2- Upload de arquivos\n3- Rodar estudo\n4- Abortar execução\n5- '
-                             'Informações do estudo\n0- Sair\n')
+        control_flow = input(
+            '1- Criar estudo\n2- Rodar estudo\n3- Abortar execução\n4- Informações do estudo\n0- Sair\n')
         if control_flow == "1":
 
             nameStudy, path_opt = model_params()
@@ -25,54 +26,60 @@ def main():
 
         elif control_flow == "2":
 
-            nameStudy, path_model = model_params()
-
-            display_studies()
-
-            upload_files(path_model)
+            prep_run()
 
         elif control_flow == "3":
-            name, path = model_params()
-
-            display_studies()
-
-            runStudy(path)
-
-        elif control_flow == "4":
             display_studies()
             stopId = int(input("Qual estudo deseja parar?\n"))
             prospec.abortExecution(stopId)
 
-        elif control_flow == "5":
+        elif control_flow == "4":
             studiesInfo()
 
         else:
             print("Programa encerrado.")
             break
 
-def runStudy(path):
-    runId = int(input("Qual estudo deseja rodar?\n"))
 
-    prospec.generateNextRev(
-        runId, "1", "1", path + "/Dados_Prospectivo.xlsx", "")
+def prep_run():
+    name, path = model_params()
 
+    display_studies()
 
-def upload_files(path_model):
     uploadId = int(
         input("Para qual estudo deseja enviar os arquivos?\n"))
+
     prep_files()
-    path_gevazp = path_model + "/GEVAZP/"
-    path_decks = path_model + "/Decks/"
+
+    send_decks(uploadId)
+
+    if name == "Curtíssimo prazo":
+        dateStudy = dt.date.today()
+        initialYear = dateStudy.year
+        initialMonth = dateStudy.month
+
+    prospec.generateStudyDecks(
+        # uploadId, initialYear, initialMonth, 0, initialMonth, initialYear, False, True, )
+        # TODO #1 parametros das funções de gerar decks, antes de enviar os arquivos
+
     path_prevs = path_model + "/prevs/"
 
+    prospec.sendPrevsToStudy(uploadId, path_prevs)
+
+    runId = int(input("Qual estudo deseja rodar?\n"))
+
+
+def send_decks(uploadId):
+    path_decks = path_model + "/Decks/"
     for file in Path(path_decks).glob("**/*"):
         if file.suffix == ".zip":
             prospec.sendFileToStudy(uploadId, file, file.name)
 
+
+def send_gevazp(path_model, uploadId):
+    path_gevazp = path_model + "/GEVAZP/"
     for file in Path(path_gevazp).glob("**/*"):
         prospec.sendFileToDeck(uploadId, "", file, file.name)
-
-    prospec.sendPrevsToStudy(uploadId, path_prevs)
 
 
 def studiesInfo():
@@ -103,13 +110,13 @@ def display_studies():
 
 def model_params():
     nameStudy = ""
-    path_of_opt = ""
+    path = ""
     choice = input(
         "Qual o tipo de estudo que deseja?\n1- Curtísimo prazo\n2- ONS CP\n3- Matriz CP\n")
     choice = int(choice)
     if choice == 1:
         nameStudy = "Curtíssimo prazo"
-        path_of_opt = "CP/Curtissimo"
+        path = "CP/Curtissimo"
 
     elif choice < 4:
         print("Opção em implementação.")
@@ -117,7 +124,7 @@ def model_params():
     else:
         print("Opção inválida.")
 
-    return nameStudy, path_of_opt
+    return nameStudy, path
 
 
 main()
