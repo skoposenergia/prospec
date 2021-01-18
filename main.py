@@ -119,6 +119,9 @@ def model_params():
         path = "CP/Curtissimo"
 
     elif choice < 4:
+        #TODO #4 Tratamento de caso para CP ONS
+        #TODO #5 Tratamento de caso para CP Matriz
+        #TODO #2 Tratamento de caso para MP Matriz
         print("Opção em implementação.")
 
     else:
