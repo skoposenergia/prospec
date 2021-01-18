@@ -1,6 +1,7 @@
 import datetime as dt
 from pathlib import Path
-
+import calendar
+import numpy as np
 from src import functionsProspecAPI as prospec
 from src.arrFiles import main as prep_files
 
@@ -28,6 +29,7 @@ def main():
         elif control_flow == "2":
 
             prep_run()
+            prospec.runExecution(studyId, idServer, idQueue, '', '0', '0', '2')
 
         elif control_flow == "3":
             display_studies()
@@ -55,15 +57,14 @@ def prep_run():
     send_decks(path, studyId)
 
     if name == "Curtíssimo prazo":
-        targetDates = []
 
-        todayDate, multipleRevision = treat_dates(targetDates)
+        todayDate, multipleRevision, targetDates = treat_dates(targetDates)
 
         initialYear = todayDate.year
         initialMonth = todayDate.month
         duration = str(todayDate.month - targetDates[1].month)
-        month = targetDates[1].month
-        year = targetDates[1].year
+        month = [targetDates[0].month, targetDates[1].month]
+        year = [targetDates[0].year, targetDates[1].year]
         dateToFormat = (initialYear, initialMonth)
         newaveFile = "NW%d%d" % dateToFormat
         decompFile = "DC%d%d" % dateToFormat
@@ -72,7 +73,7 @@ def prep_run():
     prospec.sendFileToStudy(studyId, path+'/'+configFile, configFile)
 
     prospec.generateStudyDecks(
-        studyId, [initialYear], [initialMonth], [duration], [month], [year], [], multipleRevision, newaveFile, "", decompFile, configFile, [])
+        studyId, [initialYear], [initialMonth], [duration], month, year, [False, False], multipleRevision, newaveFile, "", decompFile, configFile, [])
 
     path_prevs = path + "/prevs/"
 
@@ -80,22 +81,29 @@ def prep_run():
 
     send_gevazp(path, studyId)
 
-    prospec.runExecution(studyId, idServer, idQueue, '', '0', '0', '2')
 
-
-def treat_dates(targetDates):
+def treat_dates():
+    targetDates = []
+    multipleRevision = []
     todayDate = dt.date.today()
     firstRevDate = todayDate + dt.timedelta(weeks=1)
     secondRevDate = firstRevDate + dt.timedelta(weeks=1)
     daysDelta = 5 - int(firstRevDate.isoweekday())
     targetDates.append(firstRevDate - dt.timedelta(days=daysDelta))
     targetDates.append(secondRevDate - dt.timedelta(days=daysDelta))
-    multipleRevision = map(get_rev, targetDates)
-    return todayDate, multipleRevision
+    for target in targetDates:
+        rev = get_rev(target)
+        multipleRevision.append(rev)
+    return todayDate, multipleRevision, targetDates
 
 
-def get_rev():
-    return date_value.isocalendar()[1] - date_value.replace(day=1).isocalendar()[1] + 1
+def get_rev(date_value):
+    day = date_value.day
+    month = date_value.month
+    year = date_value.year
+    x = np.array(calendar.monthcalendar(year, month))
+    revision = np.where(x==day)[0][0]
+    return(revision)
 
 
 def send_decks(path, uploadId):

@@ -8,6 +8,7 @@ full/
 *.DAT
 *.RV*
 *.xlsx
+*.rv*
 
 
 #vscode
