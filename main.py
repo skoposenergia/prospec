@@ -73,7 +73,7 @@ def prep_run():
     prospec.sendFileToStudy(studyId, path+'/'+configFile, configFile)
 
     prospec.generateStudyDecks(
-        studyId, [initialYear], [initialMonth], [duration], month, year, [False, False], multipleRevision, newaveFile, "", decompFile, configFile, [])
+        studyId, [initialYear], [initialMonth], [duration], month, year, [False, False], [True, True], newaveFile, "", decompFile, configFile, [])
 
     path_prevs = path + "/prevs/"
 
