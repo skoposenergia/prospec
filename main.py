@@ -58,7 +58,7 @@ def prep_run():
 
     if name == "Curtíssimo prazo":
 
-        todayDate, multipleRevision, targetDates = treat_dates(targetDates)
+        todayDate, multipleRevision, targetDates = treat_dates()
 
         initialYear = todayDate.year
         initialMonth = todayDate.month
