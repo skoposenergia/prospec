@@ -58,9 +58,9 @@ def prep_run():
         dateStudy = dt.date.today()
         initialYear = dateStudy.year
         initialMonth = dateStudy.month
-        dateToFormat = (initialYear, initialMonth)
-        newaveFile = "NW%d%d" % dateToFormat
-        decompFile = "DC%d%d" % dateToFormat
+        dateToFormat = (str(initialYear), str(initialMonth))
+        newaveFile = "NW%s%s" % dateToFormat
+        decompFile = "DC%s%s" % dateToFormat
         configFile = "Dados_Prospectivo.xlsx"
 
     prospec.generateStudyDecks(
