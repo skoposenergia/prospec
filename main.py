@@ -1,7 +1,8 @@
+import datetime as dt
+from pathlib import Path
+
 from src import functionsProspecAPI as prospec
 from src.arrFiles import main as prep_files
-from pathlib import Path
-import datetime as dt
 
 
 def main():
@@ -57,10 +58,14 @@ def prep_run():
         dateStudy = dt.date.today()
         initialYear = dateStudy.year
         initialMonth = dateStudy.month
+        dateToFormat = (initialYear, initialMonth)
+        newaveFile = "NW%d%d" % dateToFormat
+        decompFile = "DC%d%d" % dateToFormat
+        configFile = "Dados_Prospectivo.xlsx"
 
     prospec.generateStudyDecks(
-        # uploadId, initialYear, initialMonth, 0, initialMonth, initialYear, False, True, )
-        # TODO #1 parametros das funções de gerar decks, antes de enviar os arquivos
+        uploadId, initialYear, initialMonth, 0, initialMonth, initialYear, False, True, newaveFile, "", decompFile, configFile, [])
+    # TODO #1 parametros das funções de gerar decks, antes de enviar os arquivos
 
     path_prevs = path_model + "/prevs/"
 
@@ -119,9 +124,9 @@ def model_params():
         path = "CP/Curtissimo"
 
     elif choice < 4:
-        #TODO #4 Tratamento de caso para CP ONS
-        #TODO #5 Tratamento de caso para CP Matriz
-        #TODO #2 Tratamento de caso para MP Matriz
+        # TODO #4 Tratamento de caso para CP ONS
+        # TODO #5 Tratamento de caso para CP Matriz
+        # TODO #2 Tratamento de caso para MP Matriz
         print("Opção em implementação.")
 
     else:
