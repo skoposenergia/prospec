@@ -54,22 +54,25 @@ def prep_run():
 
     send_decks(path, studyId)
 
-
-
     if name == "Curtíssimo prazo":
-        
-        dateStudy = dt.date.today()
-        initialYear = str(dateStudy.year)
-        initialMonth = str(dateStudy.month)
+        targetDates = []
+
+        todayDate, multipleRevision = treat_dates(targetDates)
+
+        initialYear = todayDate.year
+        initialMonth = todayDate.month
+        duration = str(todayDate.month - targetDates[1].month)
+        month = targetDates[1].month
+        year = targetDates[1].year
         dateToFormat = (initialYear, initialMonth)
-        newaveFile = "NW%s%s" % dateToFormat
-        decompFile = "DC%s%s" % dateToFormat
+        newaveFile = "NW%d%d" % dateToFormat
+        decompFile = "DC%d%d" % dateToFormat
         configFile = "Dados_Prospectivo.xlsx"
 
     prospec.sendFileToStudy(studyId, path+'/'+configFile, configFile)
 
     prospec.generateStudyDecks(
-        studyId, initialYear, initialMonth, '0', initialMonth, initialYear, False, True, newaveFile, "", decompFile, configFile, [])
+        studyId, [initialYear], [initialMonth], [duration], [month], [year], [], multipleRevision, newaveFile, "", decompFile, configFile, [])
 
     path_prevs = path + "/prevs/"
 
@@ -78,6 +81,21 @@ def prep_run():
     send_gevazp(path, studyId)
 
     prospec.runExecution(studyId, idServer, idQueue, '', '0', '0', '2')
+
+
+def treat_dates(targetDates):
+    todayDate = dt.date.today()
+    firstRevDate = todayDate + dt.timedelta(weeks=1)
+    secondRevDate = firstRevDate + dt.timedelta(weeks=1)
+    daysDelta = 5 - int(firstRevDate.isoweekday())
+    targetDates.append(firstRevDate - dt.timedelta(days=daysDelta))
+    targetDates.append(secondRevDate - dt.timedelta(days=daysDelta))
+    multipleRevision = map(get_rev, targetDates)
+    return todayDate, multipleRevision
+
+
+def get_rev():
+    return date_value.isocalendar()[1] - date_value.replace(day=1).isocalendar()[1] + 1
 
 
 def send_decks(path, uploadId):
@@ -131,9 +149,7 @@ def model_params():
         path = "CP/Curtissimo"
 
     elif choice < 4:
-        # TODO #4 Tratamento de caso para CP ONS
-        # TODO #5 Tratamento de caso para CP Matriz
-        # TODO #2 Tratamento de caso para MP Matriz
+        
         print("Opção em implementação.")
 
     else:
