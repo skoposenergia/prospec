@@ -52,7 +52,7 @@ def prep_run():
 
     prep_files()
 
-    send_decks(uploadId)
+    send_decks(path, uploadId)
 
     if name == "Curtíssimo prazo":
         dateStudy = dt.date.today()
@@ -67,14 +67,14 @@ def prep_run():
         uploadId, initialYear, initialMonth, 0, initialMonth, initialYear, False, True, newaveFile, "", decompFile, configFile, [])
     # TODO #1 parametros das funções de gerar decks, antes de enviar os arquivos
 
-    path_prevs = path_model + "/prevs/"
+    path_prevs = path + "/prevs/"
 
     prospec.sendPrevsToStudy(uploadId, path_prevs)
 
-    runId = int(input("Qual estudo deseja rodar?\n"))
+    send_gevazp(path, uploadId)
 
 
-def send_decks(uploadId):
+def send_decks(path_model, uploadId):
     path_decks = path_model + "/Decks/"
     for file in Path(path_decks).glob("**/*"):
         if file.suffix == ".zip":
@@ -84,7 +84,8 @@ def send_decks(uploadId):
 def send_gevazp(path_model, uploadId):
     path_gevazp = path_model + "/GEVAZP/"
     for file in Path(path_gevazp).glob("**/*"):
-        prospec.sendFileToDeck(uploadId, "", file, file.name)
+        if file.is_file():
+            prospec.sendFileToDeck(uploadId, "", file, file.name)
 
 
 def studiesInfo():
