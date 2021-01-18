@@ -47,42 +47,48 @@ def prep_run():
 
     display_studies()
 
-    uploadId = int(
+    studyId = int(
         input("Para qual estudo deseja enviar os arquivos?\n"))
 
     prep_files()
 
-    send_decks(path, uploadId)
+    send_decks(path, studyId)
+
+
 
     if name == "Curtíssimo prazo":
+        
         dateStudy = dt.date.today()
-        initialYear = dateStudy.year
-        initialMonth = dateStudy.month
-        dateToFormat = (str(initialYear), str(initialMonth))
+        initialYear = str(dateStudy.year)
+        initialMonth = str(dateStudy.month)
+        dateToFormat = (initialYear, initialMonth)
         newaveFile = "NW%s%s" % dateToFormat
         decompFile = "DC%s%s" % dateToFormat
         configFile = "Dados_Prospectivo.xlsx"
 
+    prospec.sendFileToStudy(studyId, path+'/'+configFile, configFile)
+
     prospec.generateStudyDecks(
-        uploadId, initialYear, initialMonth, 0, initialMonth, initialYear, False, True, newaveFile, "", decompFile, configFile, [])
-    # TODO #1 parametros das funções de gerar decks, antes de enviar os arquivos
+        studyId, initialYear, initialMonth, '0', initialMonth, initialYear, False, True, newaveFile, "", decompFile, configFile, [])
 
     path_prevs = path + "/prevs/"
 
-    prospec.sendPrevsToStudy(uploadId, path_prevs)
+    prospec.sendPrevsToStudy(studyId, path_prevs)
 
-    send_gevazp(path, uploadId)
+    send_gevazp(path, studyId)
+
+    prospec.runExecution(studyId, idServer, idQueue, '', '0', '0', '2')
 
 
-def send_decks(path_model, uploadId):
-    path_decks = path_model + "/Decks/"
+def send_decks(path, uploadId):
+    path_decks = path + "/Decks/"
     for file in Path(path_decks).glob("**/*"):
         if file.suffix == ".zip":
             prospec.sendFileToStudy(uploadId, file, file.name)
 
 
-def send_gevazp(path_model, uploadId):
-    path_gevazp = path_model + "/GEVAZP/"
+def send_gevazp(path, uploadId):
+    path_gevazp = path + "/GEVAZP/"
     for file in Path(path_gevazp).glob("**/*"):
         if file.is_file():
             prospec.sendFileToDeck(uploadId, "", file, file.name)
