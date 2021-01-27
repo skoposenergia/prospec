@@ -4,6 +4,12 @@ mprevs/entradas/*
 mprevs/CP/saídas/*
 mprevs/CP/saídas/*
 full/
+*.zip
+*.DAT
+*.RV*
+*.xlsx
+*.rv*
+
 
 #vscode
 .vscode

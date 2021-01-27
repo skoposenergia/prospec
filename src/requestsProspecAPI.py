@@ -12,7 +12,7 @@ import json
 # Global variables | Variáveis globais
 # -----------------------------------------------------------------------------
 
-basicURL = 'https://api.prospec.norus.com.br'
+basicURL = 'https://api.prospec.app'
 verifyCertificate = True
 username = ''
 password = ''
