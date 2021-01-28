@@ -82,6 +82,7 @@ def get_rev(date_value):
 
 
 def send_decks(path, uploadId):
+    # TODO #7 corrigir o upload de decks
     path_decks = path + "/Decks/"
     for file in Path(path_decks).glob("**/*"):
         if file.suffix == ".zip":
