@@ -2,6 +2,7 @@ import calendar
 import datetime as dt
 from pathlib import Path
 from hashlib import sha256
+from zipfile import ZipFile
 
 import numpy as np
 
@@ -40,8 +41,7 @@ def prep_n_run():
         decompFile = "DC%d%s.zip" % dateToFormat
         configFile = "Dados_Prospectivo.xlsx"
 
-
-    prospec.sendFileToStudy(studyId,path+'/'+configFile, configFile)
+    prospec.sendFileToStudy(studyId, path+'/'+configFile, configFile)
 
     path_prevs = path + "/prevs/"
 
@@ -54,7 +54,6 @@ def prep_n_run():
 
     # prospec.generateStudyDecks(studyId, initialYear, initialMonth, [duration], month, year, [False, False], [
     #                            True, True], newaveFile, [newaveFile, newaveFile], [decompFile, decompFile], [configFile, configFile], [])
-
 
 
 def treat_dates():
@@ -84,9 +83,18 @@ def get_rev(date_value):
 def send_decks(path, uploadId):
     # TODO #7 corrigir o upload de decks
     path_decks = path + "/Decks/"
+    file = get_decomp_files(path_decks)
     for file in Path(path_decks).glob("**/*"):
-        if file.suffix == ".zip":
+        if file.is_file() and file.suffix == "zip":
             prospec.sendFileToStudy(uploadId, file, file.name)
+
+
+def get_decomp_files(path_decks):
+    for file in Path(path_decks).glob("**/*"):
+        if file.suffix == ".zip" and "DC" in file.name:
+            with ZipFile(file) as zp:
+                zp.extractall(path_decks)
+            file.unlink()
 
 
 def send_gevazp(path, uploadId):
