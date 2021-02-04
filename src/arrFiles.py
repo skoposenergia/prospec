@@ -57,6 +57,7 @@ def files_cp(files, dst):
 
 def send_gevazp(rv):
     matriz = ["REGRAS.DAT", "VAZOES.DAT", "MODIF.DAT", "POSTOS.DAT"]
+    rv = rv.replace("PMO", "RV0")
     ons_cp = ["REGRAS.DAT", "VAZOES.DAT", "MODIF.DAT",
               "POSTOS.DAT", "prevs.%s" % rv]
 
