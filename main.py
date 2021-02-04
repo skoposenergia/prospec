@@ -50,7 +50,8 @@ def prep_n_run():
     send_gevazp(path, studyId)
 
     prospec.runExecution(studyId, idServer, idQueue, '', '0', '0', '2')
-    prospec.generateNextRev(studyId, newaveFile, decompFile, configFile, [])
+    
+    # prospec.generateNextRev(studyId, newaveFile, decompFile, configFile, [])
 
     # prospec.generateStudyDecks(studyId, initialYear, initialMonth, [duration], month, year, [False, False], [
     #                            True, True], newaveFile, [newaveFile, newaveFile], [decompFile, decompFile], [configFile, configFile], [])
@@ -85,7 +86,7 @@ def send_decks(path, uploadId):
     path_decks = path + "/Decks/"
     file = get_decomp_files(path_decks)
     for file in Path(path_decks).glob("**/*"):
-        if file.is_file() and file.suffix == "zip":
+        if file.is_file() and not ("git" in file.name):
             prospec.sendFileToStudy(uploadId, file, file.name)
 
 
@@ -93,8 +94,7 @@ def get_decomp_files(path_decks):
     for file in Path(path_decks).glob("**/*"):
         if file.suffix == ".zip" and "DC" in file.name:
             with ZipFile(file) as zp:
-                zp.extractall(path_decks)
-            file.unlink()
+                zp.extractall(path_decks+'/'+"decomp")
 
 
 def send_gevazp(path, uploadId):
