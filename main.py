@@ -1,7 +1,6 @@
 import calendar
 import datetime as dt
 from pathlib import Path
-from hashlib import sha256
 from zipfile import ZipFile
 
 import numpy as np
@@ -39,6 +38,7 @@ def prep_n_run():
         dateToFormat = (initialYear, monthStr)
         newaveFile = "NW%d%s.zip" % dateToFormat
         decompFile = "DC%d%s.zip" % dateToFormat
+
         configFile = "Dados_Prospectivo.xlsx"
 
     prospec.sendFileToStudy(studyId, path+'/'+configFile, configFile)
@@ -50,7 +50,7 @@ def prep_n_run():
     send_gevazp(path, studyId)
 
     prospec.runExecution(studyId, idServer, idQueue, '', '0', '0', '2')
-    
+
     # prospec.generateNextRev(studyId, newaveFile, decompFile, configFile, [])
 
     # prospec.generateStudyDecks(studyId, initialYear, initialMonth, [duration], month, year, [False, False], [
@@ -85,9 +85,26 @@ def send_decks(path, uploadId):
     # TODO #7 corrigir o upload de decks
     path_decks = path + "/Decks/"
     file = get_decomp_files(path_decks)
-    for file in Path(path_decks).glob("**/*"):
-        if file.is_file() and not ("git" in file.name):
-            prospec.sendFileToStudy(uploadId, file, file.name)
+    completeStudyZip = "CompleteStudy.zip"
+    zip_path = path_decks+completeStudyZip
+    # TODO #9 criação do zip de decks
+
+    decks = [item for item in Path(path_decks).glob(
+        "**/*") if item.suffix == ".zip"]
+
+    with ZipFile(zip_path, 'w') as zp:
+        for deck in decks:
+            if "decomp" in deck.parts:
+                arcName = "/DECOMP/%s" % deck.name
+
+            else:
+                arcName = "/NEWAVE/%s" % deck.name
+            zp.write(deck, arcName)
+
+    prospec.sendFileToStudy(uploadId, zip_path, completeStudyZip)
+    zipDecks = Path(zip_path)
+    prospec.completeStudyDecks(uploadId, zipDecks.name, [])
+    zipDecks.unlink()
 
 
 def get_decomp_files(path_decks):
@@ -164,6 +181,7 @@ def main():
         if control_flow == "1":
 
             nameStudy, path_opt = model_params()
+            
 
             create_study(nameStudy)
 
