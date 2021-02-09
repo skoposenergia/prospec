@@ -1,7 +1,7 @@
 import calendar
 import datetime as dt
 from pathlib import Path
-from hashlib import sha256
+from zipfile import ZipFile
 
 import numpy as np
 
@@ -38,10 +38,10 @@ def prep_n_run():
         dateToFormat = (initialYear, monthStr)
         newaveFile = "NW%d%s.zip" % dateToFormat
         decompFile = "DC%d%s.zip" % dateToFormat
+
         configFile = "Dados_Prospectivo.xlsx"
 
-
-    prospec.sendFileToStudy(studyId,path+'/'+configFile, configFile)
+    prospec.sendFileToStudy(studyId, path+'/'+configFile, configFile)
 
     path_prevs = path + "/prevs/"
 
@@ -50,11 +50,11 @@ def prep_n_run():
     send_gevazp(path, studyId)
 
     prospec.runExecution(studyId, idServer, idQueue, '', '0', '0', '2')
-    prospec.generateNextRev(studyId, newaveFile, decompFile, configFile, [])
+
+    # prospec.generateNextRev(studyId, newaveFile, decompFile, configFile, [])
 
     # prospec.generateStudyDecks(studyId, initialYear, initialMonth, [duration], month, year, [False, False], [
     #                            True, True], newaveFile, [newaveFile, newaveFile], [decompFile, decompFile], [configFile, configFile], [])
-
 
 
 def treat_dates():
@@ -82,10 +82,36 @@ def get_rev(date_value):
 
 
 def send_decks(path, uploadId):
+    # TODO #7 corrigir o upload de decks
     path_decks = path + "/Decks/"
+    file = get_decomp_files(path_decks)
+    completeStudyZip = "CompleteStudy.zip"
+    zip_path = path_decks+completeStudyZip
+
+
+    decks = [item for item in Path(path_decks).glob(
+        "**/*") if item.suffix == ".zip"]
+
+    with ZipFile(zip_path, 'w') as zp:
+        for deck in decks:
+            if "decomp" in deck.parts:
+                arcName = "/DECOMP/%s" % deck.name
+
+            else:
+                arcName = "/NEWAVE/%s" % deck.name
+            zp.write(deck, arcName)
+
+    prospec.sendFileToStudy(uploadId, zip_path, completeStudyZip)
+    zipDecks = Path(zip_path)
+    prospec.completeStudyDecks(uploadId, zipDecks.name, [])
+    zipDecks.unlink()
+
+
+def get_decomp_files(path_decks):
     for file in Path(path_decks).glob("**/*"):
-        if file.suffix == ".zip":
-            prospec.sendFileToStudy(uploadId, file, file.name)
+        if file.suffix == ".zip" and "DC" in file.name:
+            with ZipFile(file) as zp:
+                zp.extractall(path_decks+'/'+"decomp")
 
 
 def send_gevazp(path, uploadId):
@@ -155,6 +181,7 @@ def main():
         if control_flow == "1":
 
             nameStudy, path_opt = model_params()
+            
 
             create_study(nameStudy)
 
