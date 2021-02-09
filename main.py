@@ -87,7 +87,7 @@ def send_decks(path, uploadId):
     file = get_decomp_files(path_decks)
     completeStudyZip = "CompleteStudy.zip"
     zip_path = path_decks+completeStudyZip
-    # TODO #9 criação do zip de decks
+
 
     decks = [item for item in Path(path_decks).glob(
         "**/*") if item.suffix == ".zip"]
