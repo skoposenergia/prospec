@@ -82,36 +82,63 @@ def get_rev(date_value):
 
 
 def send_decks(path, uploadId):
-    # TODO #7 corrigir o upload de decks
+
     path_decks = path + "/Decks/"
-    file = get_decomp_files(path_decks)
+    file = create_folder_structure(path_decks)
     completeStudyZip = "CompleteStudy.zip"
     zip_path = path_decks+completeStudyZip
 
-
+    # TODO #11 criação do zip apropriado para upload
     decks = [item for item in Path(path_decks).glob(
         "**/*") if item.suffix == ".zip"]
 
-    with ZipFile(zip_path, 'w') as zp:
-        for deck in decks:
-            if "decomp" in deck.parts:
-                arcName = "/DECOMP/%s" % deck.name
-
-            else:
-                arcName = "/NEWAVE/%s" % deck.name
-            zp.write(deck, arcName)
+    create_zip(zip_path, path_decks)
 
     prospec.sendFileToStudy(uploadId, zip_path, completeStudyZip)
     zipDecks = Path(zip_path)
     prospec.completeStudyDecks(uploadId, zipDecks.name, [])
     zipDecks.unlink()
 
+def create_zip(zip_path, path_decks):
+    create_folder_structure(path_decks)
+    studyFiles = Path(path_decks+'/study')
+    
+    # with ZipFile(zip_path, 'w') as zp:
+    #     for deck in decks:
+    #         if "decomp" in deck.parts:
+    #             arcName = "/DECOMP/%s" % deck.name
 
-def get_decomp_files(path_decks):
+    #         else:
+    #             arcName = "/NEWAVE/%s" % deck.name
+    #         zp.write(deck, arcName)
+
+
+def create_folder_structure(path_decks):
+    extract_dc(path_decks)
+    folders(path_decks)
+    rm_tmp(path_decks)
+
+def folders(path_decks):
+    files = [item for item in Path(path_decks).glob("**/*") if item.suffix == ".zip"]
+    for file in files:
+        print(file)
+        if ("sem" in file.name or "NW" in file.name) and not ("Relatorio" in file.name):
+            with ZipFile(file, 'r') as zp:
+                zp.extractall(path_decks+"/study/"+file.stem)
+
+def extract_dc(path_decks):
     for file in Path(path_decks).glob("**/*"):
         if file.suffix == ".zip" and "DC" in file.name:
             with ZipFile(file) as zp:
-                zp.extractall(path_decks+'/'+"decomp")
+                zp.extractall(path_decks+'/tmp')
+
+def rm_tmp(path_decks):
+    tmp = Path(path_decks+"/tmp")
+    for file in tmp.glob('**/*'):
+        file.unlink()
+    tmp.rmdir()
+        
+        
 
 
 def send_gevazp(path, uploadId):
@@ -202,4 +229,4 @@ def main():
             break
 
 
-main()
+create_folder_structure("CP/Curtissimo/Decks/")
